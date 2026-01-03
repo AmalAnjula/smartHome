@@ -948,7 +948,7 @@ if __name__ == '__main__':
     print(f"  - {OUTPUTS_FILE} (output configuration)")
     print("=" * 60)
     print("Starting Flask server...")
-    print("Open your browser to: http://localhost:5000")
+    print("Open your browser to: http://localhost:5001")
     print("=" * 60)
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)
   
