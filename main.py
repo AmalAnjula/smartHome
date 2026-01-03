@@ -1,19 +1,3 @@
-"""
-Flask Industrial Control System with JSON File Persistence
-- Reads sensors from sensors.json
-- Reads/writes inputs to inputs.json (8-bit uint format)
-- Reads/writes outputs config to outputs.json
-- Fixed: No page refresh interruption during dropdown selection
-
-Installation:
-pip install flask flask-cors
-
-Run:
-python app.py
-
-Then open: http://localhost:5000
-"""
-
 from flask import Flask, render_template_string, jsonify, request
 from flask_cors import CORS
 from datetime import datetime
@@ -326,7 +310,7 @@ HTML_TEMPLATE = '''
         }
         .sensors {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
         }
         .sensor-item {
@@ -352,11 +336,23 @@ HTML_TEMPLATE = '''
             margin-bottom: 1rem;
             font-weight: 600;
         }
+        
+        /* 3x2 Grid Layout for Outputs */
         .outputs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
             gap: 1rem;
         }
+        
+        /* 3x2 Grid Layout for Inputs */
+        .inputs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
         .output-card {
             background: #1f2937;
             border: 1px solid #374151;
@@ -430,11 +426,7 @@ HTML_TEMPLATE = '''
         button.success:hover { background: #059669; }
         button.danger { background: #ef4444; }
         button.danger:hover { background: #dc2626; }
-        .inputs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
-        }
+        
         .input-card {
             background: #1f2937;
             border: 1px solid #374151;
@@ -514,9 +506,33 @@ HTML_TEMPLATE = '''
             padding: 0.25rem 0.5rem;
             font-size: 0.75rem;
         }
+        
+        /* Responsive: Stack to 1 column on small screens */
         @media (max-width: 768px) {
-            .outputs-grid { grid-template-columns: 1fr; }
+            .outputs-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+            .inputs-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+            .sensors {
+                grid-template-columns: 1fr;
+            }
             .header h1 { font-size: 1.5rem; }
+        }
+        
+        /* Medium screens: 2 columns */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .outputs-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+            }
+            .inputs-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+            }
         }
     </style>
 </head>
@@ -667,7 +683,7 @@ HTML_TEMPLATE = '''
                         ${output.mode !== 'manual' ? 
                             `<button onclick="openConfig(${output.id}, '${output.mode}')" class="primary">⚙️ Config</button>` :
                             `<button onclick="toggleOutput(${output.id})" class="${output.status ? 'danger' : 'success'}">
-                                ${output.status ? 'Turn OFF' : 'Turn ON/OFF'}
+                                ${output.status ? 'Turn OFF' : 'Turn ON'}
                             </button>`
                         }
                     </div>
@@ -950,5 +966,4 @@ if __name__ == '__main__':
     print("Starting Flask server...")
     print("Open your browser to: http://localhost:5001")
     print("=" * 60)
-    app.run(debug=True, host='0.0.0.0', port=5001)
-  
+    app.run(host='0.0.0.0', port=5001)

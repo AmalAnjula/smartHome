@@ -49,7 +49,7 @@
   {
     "id": 3,
     "name": "Output 3",
-    "status": false,
+    "status": true,
     "mode": "periodic",
     "manualOverride": false,
     "periodicConfig": {
